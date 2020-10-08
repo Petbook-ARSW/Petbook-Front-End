@@ -1,8 +1,20 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Event from './Event';
 import NavBarCompany from './NavBarCompany';
+import Axios from 'axios'
 
 export default function MyEvents() {
+
+  var [myevents, setMyevents] = useState([])
+
+  useEffect(function(){
+    Axios.get("https://petbook-api.herokuapp.com/home/events")
+      .then(res => {
+        return res.data;
+      })
+      .then(Response => setMyevents(Response))
+  }, [])
+
   return (
     <div className="adminx-container">
       <NavBarCompany></NavBarCompany>
@@ -20,7 +32,14 @@ export default function MyEvents() {
               <h1>My Events</h1>
             </div>
           </div>
-          <div className="row mt-4 ml-2"><Event></Event></div>
+          <div className="row mt-4 ml-2">{
+            myevents.map(singleEvent => 
+              <Event name= {singleEvent.name}
+                date={singleEvent.date}
+                hour={singleEvent.hour}
+                information={singleEvent.information}>
+              </Event>)
+          }</div>
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ export default function NewEvent() {
       name: eventname,
       address: address,
       date: date,
-      hour: hour,
+      hour: hour+":00",
       information: description,
       host: 4,
       donaton: donaton
@@ -31,6 +31,7 @@ export default function NewEvent() {
       .then(Response => {
         alert("Registered event")
       }).catch(Response => {
+        console.log(Response)
         alert("ERROR")
       });
   }

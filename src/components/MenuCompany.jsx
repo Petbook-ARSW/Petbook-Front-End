@@ -13,7 +13,7 @@ export default function MenuPerson() {
               </span>
               <span className="sidebar-nav-name ml-3">
                 Home
-                    </span>
+              </span>
             </a>
           </li>
 
@@ -35,7 +35,7 @@ export default function MenuPerson() {
                   <span className="sidebar-nav-name">
                     <img className="menu-subitem mr-2" src="./ico/mas.png" alt="new event"></img>
                           New post
-                        </span>
+                  </span>
                 </a>
               </li>
 
@@ -44,7 +44,7 @@ export default function MenuPerson() {
                   <span className="sidebar-nav-name">
                     <img className="menu-subitem mr-2" src="./ico/search.png" alt="my events"></img>
                           My posts
-                      </span>
+                  </span>
                 </a>
               </li>
             </ul>
@@ -57,7 +57,7 @@ export default function MenuPerson() {
               </span>
               <span className="sidebar-nav-name ml-3">
                 Events
-                    </span>
+              </span>
               <span className="sidebar-nav-end">
                 <i data-feather="chevron-right" className="nav-collapse-icon"></i>
               </span>

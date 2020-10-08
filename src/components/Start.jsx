@@ -4,7 +4,7 @@ import SignIn from './SignIn';
 
 export default function Start(){
     return (
-    <div className="index-container">
+    <div className="index-container background-white">
         <div className="container register text-center col-4 border-container pl-5 pr-5 pt-3 pb-3">
             <img src="logoPetbook.png" width="40%" alt=""></img>
             <div className="container register mt-4">
