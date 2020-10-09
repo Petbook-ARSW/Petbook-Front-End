@@ -8,6 +8,7 @@ export default function NavBarCompany(){
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userId');
     localStorage.removeItem('typeUserLogged');
+    localStorage.removeItem('userName');
     window.location.href = "/";
   }
 
@@ -85,7 +86,7 @@ export default function NavBarCompany(){
                 <img src="/ico/profilepicture.png" className="d-inline-block align-top" alt="home" ></img>
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                <a className="dropdown-item" href={"/users/"+localStorage.getItem('userId')}>My Profile</a>
+                <a className="dropdown-item" href={"/users/"+localStorage.getItem('userName')}>My Profile</a>
                 <a className="dropdown-item" href="/">Settings</a>
                 <div className="dropdown-divider"></div>
                 <button className="dropdown-item text-danger" onClick={(e) => signOut()}>Sign out</button>

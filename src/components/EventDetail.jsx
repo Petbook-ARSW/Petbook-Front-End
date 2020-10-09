@@ -24,7 +24,36 @@ export default function EventDetail() {
     const [newdescription, setNewdescription] = useState("")
 
     const handleSubmit = (e) => {
-        console.log(newaddress+" "+newdate+" "+newhour+" "+newdescription);
+        e.preventDefault()
+        var address; var date; var hour; var description;
+
+        if(newaddress === ""){ address = event.address;}else{address = newaddress;}
+        if(newdate === ""){ date = event.date;}else{date = newdate;}
+        if(newhour === ""){ hour = event.hour;}else{hour = newhour+":00";}
+        if(newdescription === ""){ description = event.information;}else{description = newdescription;}
+
+        const eventUpdated = {
+            id: event.id,
+            name: event.name,
+            address: address,
+            date: date,
+            hour: hour,
+            information: description,
+            host: event.host,
+            donaton: event.donaton
+        }
+        console.log(eventUpdated)
+          Axios.post("https://petbook-api.herokuapp.com/updateEvent/events/", eventUpdated)
+            .then(res => {
+              return res.data;
+            })
+            .then(Response => {
+                alert("Event updated")
+                window.location.reload()
+            }).catch(Response => {
+              alert("ERROR")
+            });
+
     }
 
     const cancelEvent = (e) => {

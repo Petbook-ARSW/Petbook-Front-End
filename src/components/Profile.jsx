@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import NavBarCompany from './NavBarCompany';
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
+import md5 from 'md5';
 
 export default function Profile() {
 
@@ -23,7 +24,36 @@ export default function Profile() {
     const [newpassword, setNewpassword] = useState("")
 
     const handleSubmit = (e) => {
-        console.log(newemail+" "+newphone+" "+newinformation+" "+newpassword);
+        e.preventDefault()
+        var email; var phone; var info; var password;
+
+        if(newemail === ""){ email = user.mail;}else{email = newemail;}
+        if(newphone === ""){ phone = user.numberPhone;}else{phone = newphone;}
+        if(newinformation === ""){ info = user.information;}else{info = newinformation;}
+        if(newpassword === ""){ password = user.pasword;}else{password = md5(newpassword);}
+
+        const profileUpdated = {
+            id: user.id,
+            userName: user.userName,
+            pasword: password,
+            userType: user.userType,
+            mail: email,
+            numberPhone: phone,
+            information: info,
+            birthdate: user.birthdate
+          }
+
+          Axios.post("https://petbook-api.herokuapp.com/users/changeUser", profileUpdated)
+            .then(res => {
+              return res.data;
+            })
+            .then(Response => {
+                alert("Profile updated")
+                window.location.reload()
+            }).catch(Response => {
+              alert("ERROR")
+            });
+
     }
 
     return (

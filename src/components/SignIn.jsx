@@ -20,7 +20,7 @@ export default function SignIn() {
           localStorage.setItem("isLoggedIn", true);
           localStorage.setItem("typeUserLogged", Response.userType);
           localStorage.setItem("userId",Response.id);
-
+          localStorage.setItem("userName",Response.userName);
           if ( usertype === "Person"){
             window.location.href = "/homePerson";
           } else if (usertype === "Refuge"){
