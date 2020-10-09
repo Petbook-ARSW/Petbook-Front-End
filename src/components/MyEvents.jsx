@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react'; // eslint-disable-next-line react-hooks/exhaustive-deps
 import Event from './Event';
 import NavBarCompany from './NavBarCompany';
-import Axios from 'axios'
+import Axios from 'axios';
 
 export default function MyEvents() {
 
   var [myevents, setMyevents] = useState([])
 
   useEffect(function(){
-    Axios.get("https://petbook-api.herokuapp.com/home/events")
+    Axios.get("https://petbook-api.herokuapp.com/host/events/"+ localStorage.getItem('userId'))
       .then(res => {
         return res.data;
       })
@@ -34,11 +34,12 @@ export default function MyEvents() {
           </div>
           <div className="row mt-4 ml-2">{
             myevents.map(singleEvent => 
-              <Event name= {singleEvent.name}
-                date={singleEvent.date}
-                hour={singleEvent.hour}
-                information={singleEvent.information}>
-              </Event>)
+                <Event name= {singleEvent.name}
+                  id={singleEvent.id}
+                  date={singleEvent.date}
+                  hour={singleEvent.hour}
+                  information={singleEvent.information}>
+                </Event>)
           }</div>
         </div>
       </div>

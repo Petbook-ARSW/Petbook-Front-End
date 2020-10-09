@@ -10,15 +10,24 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    Axios.get("https://petbook-api.herokuapp.com/home/users/" + username)
+    Axios.get("https://petbook-api.herokuapp.com/users/" + username)
       .then(res => {
         return res.data;
       })
       .then(Response => {
         if (Response.pasword === md5(password)) {
           setUsertype(Response.userType)
-            console.log(usertype)
-            window.location.href = "/home"
+          localStorage.setItem("isLoggedIn", true);
+          localStorage.setItem("typeUserLogged", Response.userType);
+          localStorage.setItem("userId",Response.id);
+
+          if ( usertype === "Person"){
+            window.location.href = "/homePerson";
+          } else if (usertype === "Refuge"){
+            window.location.href = "/homeRefuge";
+          }else if (usertype === "Veterinary"){
+            window.location.href = "/homeVeterinary";
+          }
         } else {
           alert("Invalid password")
         }

@@ -24,7 +24,7 @@ export default function SignUp() {
       birthdate: birthdate
     }
 
-    Axios.post("https://petbook-api.herokuapp.com/home/users/newUser", user)
+    Axios.post("https://petbook-api.herokuapp.com/users/newUser", user)
       .then(res => {
         return res.data;
       })

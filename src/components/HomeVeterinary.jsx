@@ -1,10 +1,11 @@
 import React from 'react';
+import NavBarCompany from './NavBarCompany';
 
 export default function HomeVeterinary(){
 
   return(
-    <div>
-      <h1>INICIO VETERINARIA</h1>
+    <div className="adminx-container">
+      <NavBarCompany></NavBarCompany>
     </div>
   );
 

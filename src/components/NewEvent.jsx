@@ -19,12 +19,12 @@ export default function NewEvent() {
       date: date,
       hour: hour+":00",
       information: description,
-      host: 4,
+      host: localStorage.getItem('userId'),
       donaton: donaton
     }
     console.log(event)
 
-    Axios.post("https://petbook-api.herokuapp.com/home/events/newEvent", event)
+    Axios.post("https://petbook-api.herokuapp.com/events/newEvent", event)
       .then(res => {
         return res.data;
       })
