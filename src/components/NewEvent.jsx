@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios'
 import NavBarCompany from './NavBarCompany';
 
@@ -10,6 +10,12 @@ export default function NewEvent() {
   const [hour, setHour] = useState("")
   const [description, setDescription] = useState("")
   const [donaton, setDonaton] = useState(false)
+
+  useEffect(function(){
+    if(localStorage.getItem("typeUserLogged") === "Veterinary"){
+      document.getElementById("isDonaton").style.display = "none";
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -30,6 +36,8 @@ export default function NewEvent() {
       })
       .then(Response => {
         alert("Registered event")
+        console.log(Response)
+        window.location.href = "/myEvents";
       }).catch(Response => {
         console.log(Response)
         alert("ERROR")
@@ -44,7 +52,7 @@ export default function NewEvent() {
           <div className="container-fluid">
             <nav aria-label="breadcrumb" role="navigation">
               <ol className="breadcrumb adminx-page-breadcrumb">
-                <li className="breadcrumb-item"><a href="/home">Home</a></li>
+                <li className="breadcrumb-item"><a href="/">Home</a></li>
                 <li className="breadcrumb-item"><a href="/events">Events</a></li>
                 <li className="breadcrumb-item active" aria-current="page">New event</li>
               </ol>
@@ -77,7 +85,7 @@ export default function NewEvent() {
                   <textarea type="text" className="form-control mt-2" placeholder="Description" name="information" required
                     onChange={(e) => setDescription(e.target.value)}></textarea>
 
-                  <div className="form-check form-check-inline ml-2 mt-4">
+                  <div className="form-check form-check-inline ml-2 mt-4" id="isDonaton">
                     <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" name="isdonaton"
                       onChange={(e) => setDonaton(!donaton)}></input>
 

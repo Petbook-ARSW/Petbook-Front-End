@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'; // eslint-disable-next-line react-hooks/exhaustive-deps
+import React, {useEffect, useState} from 'react';
 import Event from './Event';
 import NavBarCompany from './NavBarCompany';
 import Axios from 'axios';
@@ -23,7 +23,7 @@ export default function MyEvents() {
           <div className="container-fluid">
             <nav aria-label="breadcrumb" role="navigation">
               <ol className="breadcrumb adminx-page-breadcrumb">
-                <li className="breadcrumb-item"><a href="/home">Home</a></li>
+                <li className="breadcrumb-item"><a href="/">Home</a></li>
                 <li className="breadcrumb-item"><a href="/events">Events</a></li>
                 <li className="breadcrumb-item active" aria-current="page">My events</li>
               </ol>

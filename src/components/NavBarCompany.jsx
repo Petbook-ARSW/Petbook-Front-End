@@ -1,7 +1,6 @@
 import React from 'react';
 import MenuCompany from './MenuCompany';
 
-
 export default function NavBarCompany(){
 
   const signOut = (e) =>{
@@ -21,7 +20,7 @@ export default function NavBarCompany(){
               <i data-feather="menu"><img className= "menu-icon" src="/ico/menu.png" alt="menu"></img></i>
             </button>
           </div>
-          <a className="navbar-brand mb-0 h1 d-flex" href="/home">
+          <a className="navbar-brand mb-0 h1 d-flex" href="/">
             <img src="/logoPetbookNav.png" className="navbar-brand-image d-inline-block align-top mr-2 nav-item" alt="logo"></img>
           </a>
           <form className="form-inline  d-none d-flex mx-auto">
