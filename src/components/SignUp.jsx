@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import md5 from 'md5';
-import Axios from 'axios'
+import {postUser} from '../services/userAPIClient';
+import swal from 'sweetalert';
 
 export default function SignUp() {
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [email, setEmail] = useState("")
-  const [numberphone, setNumberphone] = useState("")
-  const [birthdate, setBirthdate] = useState("")
-  const [information, setInformation] = useState("")
-  const [usertype, setUserType] = useState("Person")
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [numberphone, setNumberphone] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [information, setInformation] = useState("");
+  const [usertype, setUserType] = useState("Person");
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -23,17 +24,12 @@ export default function SignUp() {
       information: information,
       birthdate: birthdate
     }
-
-    Axios.post("https://petbook-api.herokuapp.com/users/newUser", user)
-      .then(res => {
-        return res.data;
+    postUser(user)
+      .then( () => {
+        swal({title: "Sign up", icon:"success", text: "Registered user", timer:"5000"})
+          .then( () => window.location.href = "/");
       })
-      .then(Response => {
-        alert("Registered user")
-        window.location.href = "/"
-      }).catch(Response => {
-        alert("ERROR")
-      });
+      .catch( () => swal({title: "Sign up", icon:"error", text: "Fail", timer:"5000"}))
   }
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Event({idEvent ,name, date, hour, information}) {
+export default function Event({id, name, birthdate, information}) {
 
     return (
         <div className="col-lg-4 mt-3 back ">
@@ -9,12 +9,9 @@ export default function Event({idEvent ,name, date, hour, information}) {
                    <h4><strong>{name}</strong></h4>
                 </div>
                 <div className="card-body">
-                    <div className="row mb-3">
-                      <h6 className="card-title col-5">{date}</h6>
-                      <h6 className="card-title">{hour}</h6>
-                    </div>
+                    <h6 className="card-title col-5">Birthdate: {birthdate}</h6>
                     <p className="card-text information">{information}</p>
-                    <a href={"/events/"+idEvent} className="a-invisible">
+                    <a href={"/pets/"+id} className="a-invisible">
                         <button className="btn-petbook btn-block mt-4">View</button>
                     </a>
                 </div>

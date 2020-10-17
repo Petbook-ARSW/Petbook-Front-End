@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
-import Axios from 'axios'
 import md5 from 'md5';
+import {getUserByUserName} from '../services/userAPIClient';
+import swal from 'sweetalert';
 
 export default function SignIn() {
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [usertype, setUsertype] = useState("")
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    Axios.get("https://petbook-api.herokuapp.com/users/" + username)
-      .then(res => {
-        return res.data;
-      })
-      .then(Response => {
-        if (Response.pasword === md5(password)) {
-          setUsertype(Response.userType)
+    getUserByUserName(username)
+      .then( ( {id, userName, pasword, userType} ) => {
+        if (pasword === md5(password)) {
           localStorage.setItem("isLoggedIn", true);
-          localStorage.setItem("typeUserLogged", Response.userType);
-          localStorage.setItem("userId",Response.id);
-          localStorage.setItem("userName",Response.userName);
-          if ( usertype === "Person"){
-            window.location.href = "/homePerson";
-          } else if (usertype === "Refuge"){
-            window.location.href = "/homeRefuge";
-          }else if (usertype === "Veterinary"){
-            window.location.href = "/homeVeterinary";
-          }
+          localStorage.setItem("typeUserLogged", userType);
+          localStorage.setItem("userId", id);
+          localStorage.setItem("userName", userName);
+          window.location.href = "/";
         } else {
-          alert("Invalid password")
+          swal({title: "Sign in", icon:"error", text: "Invalid password", timer:"5000"});
         }
-      }).catch(Response => {
-        alert("Invalid user name")
+      })
+      .catch( () => {
+        swal({title: "Sign in", icon:"error", text: "Invalid user name", timer:"5000"});
       });
   }
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios'
-import NavBarCompany from './NavBarCompany';
+import NavBar from './NavBar';
+import {postEvent} from '../services/eventAPIClient';
+import swal from 'sweetalert';
+
 
 export default function NewEvent() {
 
@@ -30,23 +32,19 @@ export default function NewEvent() {
     }
     console.log(event)
 
-    Axios.post("https://petbook-api.herokuapp.com/events/newEvent", event)
-      .then(res => {
-        return res.data;
-      })
-      .then(Response => {
-        alert("Registered event")
-        console.log(Response)
-        window.location.href = "/myEvents";
-      }).catch(Response => {
-        console.log(Response)
-        alert("ERROR")
-      });
+    postEvent(event)
+    .then(() => {
+      swal({title: "Register event", icon:"success", text: "Event registered", timer:"5000"})
+          .then( () => window.location.href = "/myEvents");
+    }).catch(() => {
+        swal({title: "Register event", icon:"error", text: "Fail", timer:"5000"})
+    });
+
   }
 
   return (
     <div className="adminx-container">
-      <NavBarCompany></NavBarCompany>
+      <NavBar />
       <div className="adminx-content">
         <div className="adminx-main-content">
           <div className="container-fluid">

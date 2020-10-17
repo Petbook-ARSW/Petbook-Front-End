@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import NavBarCompany from './NavBarCompany';
-import Axios from 'axios'
+import NavBar from './NavBar';
 import { useParams } from 'react-router-dom';
 import Goal from './Goal';
+import {getEventById, getGoalsOfEvent, cancelEventById} from '../services/eventAPIClient';
+import NewGoal from './NewGoal';
+import ModifyEvent from './ModifyEvent';
+import swal from 'sweetalert';
+
 
 export default function EventDetail() {
 
@@ -11,10 +15,7 @@ export default function EventDetail() {
     const [goals, setGoals] = useState([]);
 
     useEffect(function () {
-        Axios.get("https://petbook-api.herokuapp.com/events/" + id)
-            .then(res => {
-                return res.data
-            })
+        getEventById(id)
             .then(Response => {
                 setEvent(Response)
                 if(!Response.donaton){
@@ -22,81 +23,49 @@ export default function EventDetail() {
                     document.getElementById("goalsdiv").style.display = "none";
                 }
             })
-            .catch(Response => { console.log(Response) })
-
-        Axios.get("https://petbook-api.herokuapp.com/events/"+id+"/goals")
-            .then(res => {
-                return res.data
-            })
+            .catch(Response => { console.log(Response) });
+        
+        getGoalsOfEvent(id)
             .then(Response => {
                 setGoals(Response);
             })
-            .catch(Response => {console.log(Response)})
+            .catch(Response => {console.log(Response)});
 
         if ( localStorage.getItem("typeUserLogged") === "Person") {
             document.getElementById("cancelbtn").style.display = "none";
             document.getElementById("addgoalbtn").style.display = "none";
+            document.getElementById("modifybtn").style.display = "none";
             document.getElementById("btnassist").style.visibility = "visible";
         }
 
-    }, [id])
-
-
-    const [newaddress, setNewaddress] = useState("")
-    const [newdate, setNewdate] = useState("")
-    const [newhour, setNewhour] = useState("")
-    const [newdescription, setNewdescription] = useState("")
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        var address; var date; var hour; var description;
-
-        if (newaddress === "") { address = event.address; } else { address = newaddress; }
-        if (newdate === "") { date = event.date; } else { date = newdate; }
-        if (newhour === "") { hour = event.hour; } else { hour = newhour + ":00"; }
-        if (newdescription === "") { description = event.information; } else { description = newdescription; }
-
-        const eventUpdated = {
-            id: event.id,
-            name: event.name,
-            address: address,
-            date: date,
-            hour: hour,
-            information: description,
-            host: event.host,
-            donaton: event.donaton
-        }
-        console.log(eventUpdated)
-        Axios.post("https://petbook-api.herokuapp.com/updateEvent/events/", eventUpdated)
-            .then(res => {
-                return res.data;
-            })
-            .then(Response => {
-                alert("Event updated")
-                window.location.reload()
-            }).catch(Response => {
-                alert("ERROR")
-            });
-
-    }
+    }, [id])    
 
     const cancelEvent = (e) => {
         e.preventDefault()
-        Axios.delete("https://petbook-api.herokuapp.com/deleteEvent/events/" + id)
-            .then(res => {
-                return res.data;
-            })
-            .then(Response => {
-                alert("Event canceled")
-                window.location.href = "/myEvents"
-            })
-            .catch(Response => { alert("ERROR") })
+        swal({title: "Cancel event", icon:"warning", text: "Are you sure?", timer:"10000",
+        buttons: ["NO", "YES"]})
+        .then( res => {
+            if (res){ 
+                cancelEventById(id)
+                    .then(() => {
+                        swal({title: "Cancel event", icon:"success", text: "Event canceled", timer:"5000"})
+                            .then( () =>  window.location.href = "/myEvents");
+                    })
+                    .catch(() => {
+                        swal({title: "Cancel event", icon:"error", text: "Fail", timer:"5000"})
+                    })
+            }
+        });
+    }
+
+    const assistEvent = (e) => {
+        e.preventDefault(e);
     }
 
     return (
         <React.Fragment>
             <div className="adminx-container">
-                <NavBarCompany></NavBarCompany>
+                <NavBar />
                 <div className="adminx-content">
                     <div className="adminx-main-content">
                         <div className="container-fluid">
@@ -107,14 +76,15 @@ export default function EventDetail() {
                                         <h6>Date: {event.date}</h6>
                                         <h6 className="ml-5">Hour: {event.hour}</h6>
                                     </div>
-                                    <button className="btn-petbook mt-2" onClick={cancelEvent} id="cancelbtn">Cancel</button>
-                                    <button className="btn-petbook ml-4" data-toggle="modal" data-target="#updateEvent" id="modifybtn">Modify</button>
-                                    <button className="btn-petbook ml-4" data-toggle="modal" data-target="#createGoal" id="addgoalbtn">Add Goal</button>
-                                    <button className="btn-petbook ml-4" id="btnassist" style={{visibility:"hidden"}}>Assist</button>
+                                    <button className="btn-petbook mt-2 mr-4" onClick={cancelEvent} id="cancelbtn">Cancel</button>
+                                    <button className="btn-petbook mr-4" data-toggle="modal" data-target="#updateEvent" id="modifybtn">Modify</button>
+                                    <button className="btn-petbook mr-4" data-toggle="modal" data-target="#createGoal" id="addgoalbtn"s>Add Goal</button>
+                                    <button className="btn-petbook" id="btnassist" onClick={assistEvent} style={{visibility:"hidden"}}>Assit</button>
+                                    <button className="btn-petbook" id="btnnoassist" style={{visibility:"hidden"}}>No Assit</button>
                                 </div>
                             </nav>
                         </div>
-                        <div className="row mt-4">
+                        <div className="row mt-4 ml-1">
                             <div className="col-lg-5">
                                 <div className="card mb-grid">
                                     <div className="card-header text-center">
@@ -140,7 +110,7 @@ export default function EventDetail() {
                                     </div>
                                     <div className="p-4">{
                                         goals.map(singleGoal => 
-                                            <Goal id={singleGoal.id} value={singleGoal.value} prize={singleGoal.prize}/>)
+                                            <Goal goal={singleGoal} />)
                                     }</div>
                                 </div>
                             </div>
@@ -157,35 +127,7 @@ export default function EventDetail() {
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form className="p-4" onSubmit={handleSubmit}>
-                            <div className="modal-body">
-
-                                <h4><strong>{event.name}</strong></h4>
-                                <div className="input-text mt-4">
-                                    <h6>{event.address}</h6>
-                                    <input type="text" className="form-control" placeholder="Address" name="New address"
-                                        onChange={(e) => setNewaddress(e.target.value)}></input>
-                                </div>
-                                <div className="input-text mt-4">
-                                    <h6>{event.date}</h6>
-                                    <input type="date" className="form-control mt-2" placeholder="Date" name="New date"
-                                        onChange={(e) => setNewdate(e.target.value)}></input>
-                                </div>
-                                <div className="input-text mt-4">
-                                    <h6>{event.hour}</h6>
-                                    <input type="time" className="form-control mt-2" placeholder="Hour" name="New hour"
-                                        onChange={(e) => setNewhour(e.target.value)}></input>
-                                </div>
-                                <div className="input-text mt-4">
-                                    <h6>{event.information}</h6>
-                                    <textarea type="text" className="form-control mt-2" placeholder="Information" name="New information"
-                                        onChange={(e) => setNewdescription(e.target.value)}></textarea>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn-petbook">Save</button>
-                            </div>
-                        </form>
+                       <ModifyEvent event={event}/> 
                     </div>
                 </div>
             </div>
@@ -198,18 +140,7 @@ export default function EventDetail() {
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form className="p-4" onSubmit={handleSubmit}>
-                            <div className="modal-body">
-                                <h4 className="mb-4"><strong>{event.name}</strong></h4>
-                                <input type="text" className="form-control mt-3" placeholder="Goal value" name="New address"
-                                    onChange=""></input>
-                                <input type="text" className="form-control mt-2" placeholder="Prize" name="New date"
-                                    onChange=""></input>
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn-petbook">Save</button>
-                            </div>
-                        </form>
+                        <NewGoal idEvent={event.id} eventname={event.name} />
                     </div>
                 </div>
             </div>

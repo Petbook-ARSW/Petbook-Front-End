@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Event from './Event';
-import NavBarCompany from './NavBarCompany';
+import NavBar from './NavBar';
 import Axios from 'axios';
 
 export default function MyEvents() {
@@ -17,7 +17,7 @@ export default function MyEvents() {
 
   return (
     <div className="adminx-container">
-      <NavBarCompany></NavBarCompany>
+      <NavBar />
       <div className="adminx-content" id="new">
         <div className="adminx-main-content">
           <div className="container-fluid">
@@ -35,7 +35,7 @@ export default function MyEvents() {
           <div className="row mt-4 ml-2">{
             myevents.map(singleEvent => 
                 <Event name= {singleEvent.name}
-                  id={singleEvent.id}
+                  idEvent={singleEvent.id}
                   date={singleEvent.date}
                   hour={singleEvent.hour}
                   information={singleEvent.information}>

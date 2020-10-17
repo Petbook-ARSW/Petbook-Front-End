@@ -14,16 +14,8 @@ class GuardRoute extends React.Component {
             return <Redirect to="/"/>;
 
         }else if (type === "public"){
-            console.log(localStorage.getItem("typeUserLogged"))
-            console.log(isLogged)
             if (isLogged){
-                if (localStorage.getItem("typeUserLogged") === "Person"){
-                    return <Redirect to="/homePerson"/>;
-                }else if (localStorage.getItem("typeUserLogged") === "Veterinary"){
-                    return <Redirect to="/homeVeterinary"/>;
-                }else if (localStorage.getItem("typeUserLogged") === "Refuge"){
-                    return <Redirect to="/homeRefuge"/>;
-                }
+                 return <Redirect to="/home"/>;
             }
         }
         return <Route {...this.props} />

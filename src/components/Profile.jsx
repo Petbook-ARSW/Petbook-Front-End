@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import NavBarCompany from './NavBarCompany';
 import Axios from 'axios'
 import { useParams } from 'react-router-dom';
 import md5 from 'md5';
+import NavBar from './NavBar';
+import swal from 'sweetalert';;
 
 export default function Profile() {
 
@@ -48,10 +49,11 @@ export default function Profile() {
               return res.data;
             })
             .then(Response => {
-                alert("Profile updated")
-                window.location.reload()
+                swal({title: "Edit profile", icon:"success", text: "Profile updated", timer:"5000"})
+                    .then( () => window.location.reload());
             }).catch(Response => {
-              alert("ERROR")
+                swal({title: "Edit profile", icon:"error", text: "fail", timer:"5000"})
+                    .then( () => window.location.reload());
             });
 
     }
@@ -59,7 +61,7 @@ export default function Profile() {
     return (
         <React.Fragment>
             <div className="adminx-container">
-                <NavBarCompany></NavBarCompany>
+                <NavBar />
                 <div className="adminx-content">
                     <div className="adminx-main-content">
                         <div className="container-fluid">

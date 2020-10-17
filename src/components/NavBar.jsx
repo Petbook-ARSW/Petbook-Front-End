@@ -1,8 +1,8 @@
 import React from 'react';
 import MenuCompany from './MenuCompany';
+import MenuPerson from './MenuPerson';
 
-export default function NavBarCompany(){
-
+export default function NavBar(){
   const signOut = (e) =>{
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userId');
@@ -12,9 +12,12 @@ export default function NavBarCompany(){
   }
 
   return(
-    <div>
-      <MenuCompany id="menu"></MenuCompany>
-      <nav className="navbar navbar-expand justify-content-between fixed-top background-white">
+    <>
+      { localStorage.getItem('typeUserLogged') === 'Person' ?  
+        <MenuPerson id="menu"/> :
+        <MenuCompany id="menu"/>
+      }  
+      <nav className="navbar navbar-expand justify-content-between fixed-top background-white" >
           <div className="d-flex flex-1 d-block d-md-none">
             <button className="sidebar-toggle ml-3 btn-ico">
               <i data-feather="menu"><img className= "menu-icon" src="/ico/menu.png" alt="menu"></img></i>
@@ -93,6 +96,6 @@ export default function NavBarCompany(){
             </li>
           </ul>
         </nav>
-      </div>
+      </>
   );
 }
