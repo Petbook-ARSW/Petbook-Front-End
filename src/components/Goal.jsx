@@ -25,7 +25,7 @@ export default function Goal( {goal} ) {
 
     return (
         <React.Fragment>
-            <div class="row align-items-start">
+            <div className="row align-items-start">
                 <button onClick={deleteGoal}>del</button>
                 <h5 className="col-3"><strong>$ {goal.valor}</strong></h5>
                 <p className="col-7">{goal.prize}</p>

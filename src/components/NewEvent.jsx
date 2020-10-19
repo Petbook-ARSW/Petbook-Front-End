@@ -17,6 +17,9 @@ export default function NewEvent() {
     if(localStorage.getItem("typeUserLogged") === "Veterinary"){
       document.getElementById("isDonaton").style.display = "none";
     }
+    let today = new Date();
+    let tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    document.getElementById("date").setAttribute('min', tomorrow.toISOString().split('T')[0]);
   }, []);
 
   const handleSubmit = (e) => {
@@ -74,7 +77,7 @@ export default function NewEvent() {
                   <input type="text" className="form-control mt-2" placeholder="Address" name="address" required
                     onChange={(e) => setAddress(e.target.value)}></input>
 
-                  <input type="date" className="form-control mt-2" placeholder="Date" name="date" required
+                  <input type="date" className="form-control mt-2" placeholder="Date" name="date" id="date" required
                     onChange={(e) => setDate(e.target.value)}></input>
 
                   <input type="time" className="form-control mt-2" placeholder="Hour" name="hour" aria-required

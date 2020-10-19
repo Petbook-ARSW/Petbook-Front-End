@@ -65,7 +65,7 @@ export default function MenuPerson(){
                 <a href="/events" className="sidebar-nav-link" data-feather="newevent">
                   <span className="sidebar-nav-name">
                     <img className="menu-item mr-2" src="/ico/nextEvents.png" alt="new event"></img>
-                        Next events
+                        All events
                   </span>
                 </a>
               </li>

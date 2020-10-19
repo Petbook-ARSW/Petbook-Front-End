@@ -87,3 +87,11 @@ export const removeGoal = ( idGoal ) => {
                 if (!res.ok) throw new Error('Response is NOT ok');
             });
 }
+
+export const getParticipantsOfEvent = ( idevent ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/events/${ idevent }/participants`)
+    .then( res => {
+        if (!res.ok) throw new Error('Response is NOT ok');
+        return res.json();
+    })
+}

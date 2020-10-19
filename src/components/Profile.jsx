@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Axios from 'axios'
 import { useParams } from 'react-router-dom';
 import md5 from 'md5';
 import NavBar from './NavBar';
-import swal from 'sweetalert';;
+import swal from 'sweetalert';
+import {getUserByUserName, updateUser} from '../services/userAPIClient';
 
 export default function Profile() {
 
@@ -11,12 +11,13 @@ export default function Profile() {
     const [user, setUser] = useState({});
 
     useEffect(function () {
-        Axios.get("https://petbook-api.herokuapp.com/users/" + username)
-            .then(res => {
-                return res.data
+        getUserByUserName(username)
+            .then(Response => {
+                setUser(Response);
+                if (Response.userName === localStorage.getItem('userName')){
+                    document.getElementById('btnupdate').style.visibility = "visible";
+                }
             })
-            .then(Response => setUser(Response))
-            .catch(Response => { console.log(Response) })
     }, [username])
 
     const [newemail, setNewemail] = useState("")
@@ -44,14 +45,11 @@ export default function Profile() {
             birthdate: user.birthdate
           }
 
-          Axios.post("https://petbook-api.herokuapp.com/users/changeUser", profileUpdated)
-            .then(res => {
-              return res.data;
-            })
-            .then(Response => {
+          updateUser(profileUpdated)
+            .then( () => {
                 swal({title: "Edit profile", icon:"success", text: "Profile updated", timer:"5000"})
                     .then( () => window.location.reload());
-            }).catch(Response => {
+            }).catch( () => {
                 swal({title: "Edit profile", icon:"error", text: "fail", timer:"5000"})
                     .then( () => window.location.reload());
             });
@@ -69,7 +67,7 @@ export default function Profile() {
                                 <div className="adminx-main-content">
                                     <h1>{user.userName}</h1>
                                     <h5>{user.userType}</h5>
-                                    <button className="btn-petbook mt-2" data-toggle="modal" data-target="#createFunction">Edit profile</button>
+                                    <button className="btn-petbook mt-2" data-toggle="modal" data-target="#updateProfile" id="btnupdate" style={{visibility: "hidden"}}>Edit profile</button>
                                 </div>
                             </nav>
                         </div>
@@ -91,7 +89,7 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
-            <div className="modal fade" id="createFunction" tabIndex="-1" aria-hidden="true">
+            <div className="modal fade" id="updateProfile" tabIndex="-1" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
