@@ -28,6 +28,7 @@ export default function EventDetail() {
                 }
                 let eventDate = new Date(Response.date.split("-")[0], Response.date.split("-")[1] - 1, Response.date.split("-")[2]);
                 if (eventDate.getTime() > new Date().getTime()) {
+                    console.log(":c")
                     if (Response.host.toString() === localStorage.getItem("userId")){
                         document.getElementById("actionsEvent").style.display = "inline";
                         document.getElementById("goalsdiv").style.visibility = "visible";
@@ -112,9 +113,9 @@ export default function EventDetail() {
                                         <button className="btn-petbook mt-2 mr-4" onClick={cancelEvent} id="cancelbtn">Cancel</button>
                                         <button className="btn-petbook mr-4" data-toggle="modal" data-target="#updateEvent" id="modifybtn">Modify</button>
                                         <button className="btn-petbook mr-4" data-toggle="modal" data-target="#createGoal" id="addgoalbtn">Add Goal</button>
-                                        <button className="btn-petbook" id="btnassist" onClick={assistEvent} style={{ display: "none" }}>Assit</button>
-                                        <button className="btn-petbook" id="btnnoassist" onClick={noAssistEvent} style={{ display: "none" }}>No Assit</button>
                                     </div>
+                                    <button className="btn-petbook" id="btnassist" onClick={assistEvent} style={{ display: "none" }}>Assit</button>
+                                    <button className="btn-petbook" id="btnnoassist" onClick={noAssistEvent} style={{ display: "none" }}>No Assit</button>
                                 </div>
                             </nav>
                         </div>
