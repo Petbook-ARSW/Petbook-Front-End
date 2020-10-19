@@ -13,6 +13,7 @@ export default function MyEvents() {
         return res.data;
       })
       .then(Response => setMyevents(Response))
+      .catch(() => setMyevents([]));
   }, [])
 
   return (

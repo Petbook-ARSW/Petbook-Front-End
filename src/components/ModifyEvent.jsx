@@ -31,10 +31,10 @@ export default function ModifyEvent( {event} ) {
         
         updateEvent(eventUpdated)
             .then(() => {
-                swal({title: "Modidy event", icon:"success", text: "Event updated", timer:"5000"})
+                swal({title: "Modify event", icon:"success", text: "Event updated", timer:"5000"})
                 .then( () => window.location.reload());
             }).catch(Response => {
-                swal({title: "Modidy event", icon:"error", text: "Fail", timer:"5000"})
+                swal({title: "Modify event", icon:"error", text: "Fail", timer:"5000"})
             });
     }
 

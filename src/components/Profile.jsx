@@ -79,7 +79,7 @@ export default function Profile() {
                                     </div>
                                     <div className="p-4">
                                         <h6 className="mt-3"><strong>Email:</strong>{user.mail}</h6>
-                                        <h6 className="mt-3"><strong>Number phome: </strong>{user.numberPhone}</h6>
+                                        <h6 className="mt-3"><strong>Number phone: </strong>{user.numberPhone}</h6>
                                         <h6 className="mt-3"><strong>Birthdate: </strong>{user.birthdate}</h6>
                                         <h6 className="mt-5"><strong>Information: </strong>{user.information}</h6>
                                     </div>

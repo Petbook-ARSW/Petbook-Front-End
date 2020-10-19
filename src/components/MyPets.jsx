@@ -9,7 +9,8 @@ export default function MyPets() {
 
   useEffect(function(){
     getPetsByIdPerson(localStorage.getItem('userId'))
-        .then(res => setMypets(res));
+        .then(res => setMypets(res))
+        .catch( () => setMypets([]));
   }, [])
 
   return (
