@@ -46,7 +46,7 @@ export default function EventDetail() {
         getParticipantsOfEvent(id)
             .then(Response => {
                 setParticipants(Response);
-                if (Response.filter( ({iduser}) => iduser === localStorage.getItem('userId')).length > 0){
+                if (Response.filter( ({iduser}) => iduser.toString() === localStorage.getItem('userId')).length > 0){
                     document.getElementById("btnnoassist").style.display = "inline";
                 }else{
                     document.getElementById("btnassist").style.display = "inline";
