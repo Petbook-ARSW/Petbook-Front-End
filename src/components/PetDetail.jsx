@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import NavBar from './NavBar';
 import { useParams } from 'react-router-dom';
 import {getPetById, removePet} from '../services/petAPIClient';
+import {getUserById} from '../services/userAPIClient';
 import ModifyPet from './ModifyPet';
 import swal from 'sweetalert';
 
@@ -9,11 +10,17 @@ export default function EventDetail() {
 
     const { id } = useParams()
     const [pet, setPet] = useState({});
+    const [ownername, setOwnername] =useState()
 
     useEffect(function () {
         getPetById(id)
             .then(Response => {
-                setPet(Response)
+                setPet(Response);
+                getUserById (Response.idowner)
+                    .then( ({userName}) => setOwnername(userName));
+                if (Response.idowner.toString() === localStorage.getItem("userId")){
+                    document.getElementById("optionspet").style.display = "inline";
+                };
             })
             .catch(Response => { console.log(Response) });
     }, [id])    
@@ -47,10 +54,12 @@ export default function EventDetail() {
                                 <div className="adminx-main-content">
                                     <h1>{pet.petname}</h1>
                                     <div className="row ml-1 mt-3 align-items-start">
-                                        <h6>Owner: <a href="/users/angipaola10" className="a-white">angipaola10</a></h6>
+                                        <h6>Owner: <a href={"/users/"+ ownername} className="a-white">{ownername}</a></h6>
                                     </div>
-                                    <button className="btn-petbook mt-2 mr-4" id="deletebtn" onClick={deletePet}>Delete</button>
-                                    <button className="btn-petbook mr-4" data-toggle="modal" data-target="#updatePet" id="modifybtn">Modify</button>
+                                    <div id="optionspet" style={{display:"none"}}>
+                                        <button className="btn-petbook mt-2 mr-4" id="deletebtn" onClick={deletePet}>Delete</button>
+                                        <button className="btn-petbook mr-4" data-toggle="modal" data-target="#updatePet" id="modifybtn">Modify</button>
+                                    </div> 
                                 </div>
                             </nav>
                         </div>

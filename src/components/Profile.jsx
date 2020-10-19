@@ -15,7 +15,7 @@ export default function Profile() {
             .then(Response => {
                 setUser(Response);
                 if (Response.userName === localStorage.getItem('userName')){
-                    document.getElementById('btnupdate').style.visibility = "visible";
+                    document.getElementById('btnupdate').style.display = "inline";
                 }
             })
     }, [username])
@@ -67,7 +67,7 @@ export default function Profile() {
                                 <div className="adminx-main-content">
                                     <h1>{user.userName}</h1>
                                     <h5>{user.userType}</h5>
-                                    <button className="btn-petbook mt-2" data-toggle="modal" data-target="#updateProfile" id="btnupdate" style={{visibility: "hidden"}}>Edit profile</button>
+                                    <button className="btn-petbook mt-2" data-toggle="modal" data-target="#updateProfile" id="btnupdate" style={{display: "none"}}>Edit profile</button>
                                 </div>
                             </nav>
                         </div>

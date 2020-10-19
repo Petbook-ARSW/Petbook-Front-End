@@ -3,7 +3,7 @@ import NavBar from './NavBar';
 import { useParams } from 'react-router-dom';
 import Goal from './Goal';
 import { getEventById, getGoalsOfEvent, cancelEventById, getParticipantsOfEvent } from '../services/eventAPIClient';
-import { postParticipation, removeParticipation } from '../services/userAPIClient';
+import { postParticipation, removeParticipation, getUserById } from '../services/userAPIClient';
 import NewGoal from './NewGoal';
 import ModifyEvent from './ModifyEvent';
 import swal from 'sweetalert';
@@ -16,6 +16,7 @@ export default function EventDetail() {
     const [event, setEvent] = useState({});
     const [goals, setGoals] = useState([]);
     const [participants, setParticipants] = useState([]);
+    const [host, setHost] = useState();
 
     useEffect(function () {
         getEventById(id)
@@ -27,14 +28,18 @@ export default function EventDetail() {
                 }
                 let eventDate = new Date(Response.date.split("-")[0], Response.date.split("-")[1] - 1, Response.date.split("-")[2]);
                 if (eventDate.getTime() > new Date().getTime()) {
-                    document.getElementById("actionsEvent").style.visibility = "visible";
-                    document.getElementById("goalsdiv").style.visibility = "visible";
+                    if (Response.host.toString() === localStorage.getItem("userId")){
+                        document.getElementById("actionsEvent").style.display = "inline";
+                        document.getElementById("goalsdiv").style.visibility = "visible";
+                    }
                     if (localStorage.getItem("typeUserLogged") === "Person") {
                         document.getElementById("cancelbtn").style.display = "none";
                         document.getElementById("addgoalbtn").style.display = "none";
                         document.getElementById("modifybtn").style.display = "none";
                     }
                 }
+                getUserById(Response.host)
+                    .then(({userName}) => setHost(userName));
             })
             .catch((Response) => { console.log(Response) });
 
@@ -46,10 +51,12 @@ export default function EventDetail() {
         getParticipantsOfEvent(id)
             .then(Response => {
                 setParticipants(Response);
-                if (Response.filter( ({iduser}) => iduser.toString() === localStorage.getItem('userId')).length > 0){
-                    document.getElementById("btnnoassist").style.display = "inline";
-                }else{
-                    document.getElementById("btnassist").style.display = "inline";
+                if (localStorage.getItem("typeUserLogged") === "Person"){
+                    if (Response.filter( ({iduser}) => iduser.toString() === localStorage.getItem('userId')).length > 0){
+                        document.getElementById("btnnoassist").style.display = "inline";
+                    }else{
+                        document.getElementById("btnassist").style.display = "inline";
+                    }
                 }
             }).catch(() => setParticipants([]));
 
@@ -101,7 +108,7 @@ export default function EventDetail() {
                                         <h6>Date: {event.date}</h6>
                                         <h6 className="ml-5">Hour: {event.hour}</h6>
                                     </div>
-                                    <div id="actionsEvent" style={{ visibility: "hidden" }}>
+                                    <div id="actionsEvent" style={{ display: "none" }}>
                                         <button className="btn-petbook mt-2 mr-4" onClick={cancelEvent} id="cancelbtn">Cancel</button>
                                         <button className="btn-petbook mr-4" data-toggle="modal" data-target="#updateEvent" id="modifybtn">Modify</button>
                                         <button className="btn-petbook mr-4" data-toggle="modal" data-target="#createGoal" id="addgoalbtn">Add Goal</button>
@@ -119,6 +126,7 @@ export default function EventDetail() {
                                     </div>
                                     <div className="p-4">
                                         <button className="btn-invisible mt-3" data-toggle="modal" data-target="#participants" id="btnparticipants">{participants.length} Participants</button>
+                                        <h6 className="mt-3"><strong>Host company: <a className="a-white" href={"/users/"+host}>{host}</a></strong></h6>
                                         <h6 className="mt-3"><strong>Event name: </strong>{event.name}</h6>
                                         <h6 className="mt-3"><strong>Date: </strong>{event.date}</h6>
                                         <h6 className="mt-3"><strong>Hour: </strong>{event.hour}</h6>
