@@ -33,8 +33,6 @@ export default function NewEvent() {
       host: localStorage.getItem('userId'),
       donaton: donaton
     }
-    console.log(event)
-
     postEvent(event)
     .then(() => {
       swal({title: "Register event", icon:"success", text: "Event registered", timer:"5000"})
