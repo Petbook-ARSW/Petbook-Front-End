@@ -11,12 +11,14 @@ import NewPet from './NewPet';
 import MyPets from './MyPets';
 import Events from './Events';
 import PetDetail from './PetDetail';
+import PostDetail from './PostDetail';
 
 class Routes extends React.Component {
   render(){
     return (
       <Switch>
           <GuardRoute path="/users/:username" type="private" component={Profile}></GuardRoute>
+          <GuardRoute path="/posts/:id" type="private" component={PostDetail}></GuardRoute>
           <GuardRoute path="/events/:id" type="private" component={EventDetail}></GuardRoute>
           <GuardRoute path="/pets/:id" type="private" component={PetDetail}></GuardRoute>
           <GuardRoute path="/myPets" type="private" component={MyPets}></GuardRoute>

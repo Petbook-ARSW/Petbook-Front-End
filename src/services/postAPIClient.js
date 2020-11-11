@@ -1,5 +1,4 @@
 export const addPost = ( file, description, idUser ) => {
-    console.log(file);
     let formData = new FormData();
     formData.append("file", file);
     formData.append("idUser", idUser);
@@ -39,4 +38,42 @@ export const getAllPosts = ( ) => {
         return res.json();
     })
 }
+
+export const getPostById = ( idpost ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/posts/${ idpost }`)
+    .then( res => {
+        if (!res.ok) throw new Error('Response is NOT ok');
+        return res.json();
+    })
+}
+
+export const getLikesOfPost = ( idpost ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/posts/${ idpost }/likes`)
+    .then( res => {
+        if (!res.ok) throw new Error('Response is NOT ok');
+        return res.json();
+    })
+}
+
+export const getCommentsOfPost = ( idpost ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/post/comments/${ idpost }`)
+    .then( res => {
+        if (!res.ok) throw new Error('Response is NOT ok');
+        return res.json();
+    })
+}
+
+export const addComment = ( comment ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/users/addComment`, {
+                 method: 'POST',
+                 headers: {
+                    "Content-Type": "application/json"
+                },
+                 body: JSON.stringify(comment)
+             }).then( res => {
+                 if (!res.ok) throw new Error('Response is NOT ok');
+             });
+}
+
+
 

@@ -3,6 +3,9 @@ import MenuCompany from './MenuCompany';
 import MenuPerson from './MenuPerson';
 
 export default function NavBar(){
+
+  var notifications = [];
+  
   const signOut = (e) =>{
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userId');
@@ -40,7 +43,10 @@ export default function NavBar(){
             <li className="nav-item dropdown d-flex align-items-center mr-2">
               <a className="nav-link nav-link-notifications" id="dropdownNotifications" data-toggle="dropdown" href="/">
                 <i className="display-inline-block align-middle mt-1"><img className= "menu-item" src=" /ico/bone.png" alt="notification"></img></i>
-                <span className="nav-link-notification-number">3</span>
+                {
+                  notifications.length > 0 &&
+                  <span className="nav-link-notification-number">{notifications.length}</span>
+                }
               </a>
               <div className="dropdown-menu dropdown-menu-right dropdown-menu-notifications" aria-labelledby="dropdownNotifications">
                 <div className="notifications-header d-flex justify-content-between align-items-center">
@@ -49,40 +55,12 @@ export default function NavBar(){
                   </span>
                   <a href="/" className="d-flex"><small>Mark all as read</small></a>
                 </div>
-
-                <div className="list-group">
-                  <a href="/" className="list-group-item list-group-item-action unread">
-                    <p className="mb-1">Invitation for <strong>Lunch</strong> on <strong>Jan 12th 2018</strong> by <strong>Laura</strong></p>
-
-                    <div className="mb-1">
-                      <button type="button" className="btn btn-primary btn-sm">Accept invite</button>
-                      <button type="button" className="btn btn-outline-danger btn-sm">Decline</button>
-                    </div>
-
-                    <small>1 hour ago</small>
-                  </a>
-
-                  <a href="/" className="list-group-item list-group-item-action">
-                    <p className="mb-1"><strong className="text-success">Goal completed</strong><br />1,000 new members today</p>
-                    <small>3 days ago</small>
-                  </a>
-
-                  <a href="/" className="list-group-item list-group-item-action">
-                    <p className="mb-1 text-danger"><strong>System error detected</strong></p>
-                    <small>3 days ago</small>
-                  </a>
-
-                  <a href="/" className="list-group-item list-group-item-action">
-                    <p className="mb-1">Your task <strong>Design Draft</strong> is due today.</p>
-                    <small>4 days ago</small>
-                  </a>
-                </div>
-
                 <div className="notifications-footer text-center">
                   <a href="/"><small>View all notifications</small></a>
                 </div>
               </div>
             </li>
+            
             <li className="nav-item dropdown ml-2">
               <a className="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="/">
                 <img src="/ico/profilepicture.png" className="d-inline-block align-top" alt="home" ></img>
