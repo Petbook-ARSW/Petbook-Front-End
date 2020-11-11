@@ -22,13 +22,8 @@ export default function EventDetail() {
         getEventById(id)
             .then(Response => {
                 setEvent(Response);
-                if (!Response.donaton) {
-                    document.getElementById("addgoalbtn").style.display = "none";
-                    document.getElementById("goalsdiv").style.display = "none";
-                }
                 let eventDate = new Date(Response.date.split("-")[0], Response.date.split("-")[1] - 1, Response.date.split("-")[2]);
                 if (eventDate.getTime() > new Date().getTime()) {
-                    console.log(":c")
                     if (Response.host.toString() === localStorage.getItem("userId")){
                         document.getElementById("actionsEvent").style.display = "inline";
                         document.getElementById("goalsdiv").style.visibility = "visible";
@@ -38,7 +33,51 @@ export default function EventDetail() {
                         document.getElementById("addgoalbtn").style.display = "none";
                         document.getElementById("modifybtn").style.display = "none";
                     }
+                }else{
+
+                }   
+            })
+            .catch((Response) => { console.log(Response) });
+
+
+
+        getEventById(id)
+            .then(Response => {
+                setEvent(Response);
+                if (!Response.donaton) {
+                    document.getElementById("addgoalbtn").style.display = "none";
+                    document.getElementById("goalsdiv").style.display = "none";
                 }
+                let eventDate = new Date(Response.date.split("-")[0], Response.date.split("-")[1] - 1, Response.date.split("-")[2]);
+                if (eventDate.getTime() > new Date().getTime()) {
+                    if (Response.host.toString() === localStorage.getItem("userId")){
+                        document.getElementById("actionsEvent").style.display = "inline";
+                        document.getElementById("goalsdiv").style.visibility = "visible";
+                    }
+                    if (localStorage.getItem("typeUserLogged") === "Person") {
+                        document.getElementById("cancelbtn").style.display = "none";
+                        document.getElementById("addgoalbtn").style.display = "none";
+                        document.getElementById("modifybtn").style.display = "none";  
+                    }
+                }
+
+                getParticipantsOfEvent(id)
+                    .then(Response => {
+                        setParticipants(Response);
+                        if (localStorage.getItem("typeUserLogged") === "Person" && eventDate > new Date().getTime()){
+                            if (Response.filter( ({iduser}) => iduser.toString() === localStorage.getItem('userId')).length > 0){
+                                document.getElementById("btnnoassist").style.display = "inline";
+                            }else{
+                                document.getElementById("btnassist").style.display = "inline";
+                            }
+                        }
+                    }).catch(() => {
+                        if (eventDate > new Date().getTime()){
+                            document.getElementById("btnassist").style.display = "inline";
+                        }
+                        setParticipants([])
+                    });
+
                 getUserById(Response.host)
                     .then(({userName}) => setHost(userName));
             })
@@ -49,17 +88,7 @@ export default function EventDetail() {
                 setGoals(Response);
             }).catch(() => setGoals([]));
 
-        getParticipantsOfEvent(id)
-            .then(Response => {
-                setParticipants(Response);
-                if (localStorage.getItem("typeUserLogged") === "Person"){
-                    if (Response.filter( ({iduser}) => iduser.toString() === localStorage.getItem('userId')).length > 0){
-                        document.getElementById("btnnoassist").style.display = "inline";
-                    }else{
-                        document.getElementById("btnassist").style.display = "inline";
-                    }
-                }
-            }).catch(() => setParticipants([]));
+        
 
     }, [id])
 
