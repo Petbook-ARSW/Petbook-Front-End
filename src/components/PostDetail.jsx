@@ -4,7 +4,8 @@ import NavBar from './NavBar';
 import Axios from 'axios';
 import { getPostById } from '../services/postAPIClient';
 import swal from 'sweetalert';
-import { removePost, updatePost, getLikesOfPost, getCommentsOfPost, addComment } from '../services/postAPIClient';
+import { removePost, updatePost, getLikesOfPost, getCommentsOfPost, addComment, postLike, disLike } from '../services/postAPIClient';
+import User from './User';
 
 export default function PostDetail() {
 
@@ -29,14 +30,14 @@ export default function PostDetail() {
       })
       .catch(() => setPost({}))
 
-      getLikesOfPost(id)
-        .then(Res => setLikes(Res))
-        .catch(() => setLikes([]));
+    getLikesOfPost(id)
+      .then(Res => setLikes(Res))
+      .catch(() => setLikes([]));
 
-      getCommentsOfPost(id)
-        .then(Res => setComments(Res))
-        .catch(() => setComments([]));
-        
+    getCommentsOfPost(id)
+      .then(Res => setComments(Res))
+      .catch(() => setComments([]));
+
   }, [id, username])
 
   const showEdit = () => {
@@ -49,21 +50,21 @@ export default function PostDetail() {
 
   const deletePost = () => {
     swal({
-        title: "Delete pet", icon: "warning", text: "Are you sure?", timer: "10000",
-        buttons: ["NO", "YES"]
+      title: "Delete pet", icon: "warning", text: "Are you sure?", timer: "10000",
+      buttons: ["NO", "YES"]
     })
-        .then(res => {
-            if (res) {
-                removePost(id)
-                    .then(() => {
-                        swal({ title: "Delete post", icon: "success", text: "Post deleted", timer: "5000" })
-                            .then(() => window.location.href = `/users/${ username }`);
-                    })
-                    .catch(() => {
-                        swal({ title: "Delete post", icon: "error", text: "Fail", timer: "5000" })
-                    })
-            }
-        });
+      .then(res => {
+        if (res) {
+          removePost(id)
+            .then(() => {
+              swal({ title: "Delete post", icon: "success", text: "Post deleted", timer: "5000" })
+                .then(() => window.location.href = `/users/${username}`);
+            })
+            .catch(() => {
+              swal({ title: "Delete post", icon: "error", text: "Fail", timer: "5000" })
+            })
+        }
+      });
   };
 
   const editPost = () => {
@@ -71,14 +72,14 @@ export default function PostDetail() {
     updatePost(post.id, post)
       .then(() => {
         swal({ title: "Update post", icon: "success", text: "Post updated", timer: "5000" })
-            .then(() => window.location.reload());
-        })
-        .catch(() => {
-            swal({ title: "Update post", icon: "error", text: "Fail", timer: "5000" })
-        })
+          .then(() => window.location.reload());
+      })
+      .catch(() => {
+        swal({ title: "Update post", icon: "error", text: "Fail", timer: "5000" })
+      })
   }
 
-  const postComment = () =>{
+  const postComment = () => {
     let newComment = {
       iduser: localStorage.getItem("userId"),
       idpost: id,
@@ -86,15 +87,28 @@ export default function PostDetail() {
     }
     console.log(newComment);
     addComment(newComment)
-      .then(() =>  window.location.reload())
+      .then(() => window.location.reload())
       .catch();
   }
 
-  const getUserComment = (iduser) =>{
+  const getUserComment = (iduser) => {
     return "user name";
   }
 
+  const addlike = () => {
+    postLike(id, localStorage.getItem("userId"))
+      .then(() => window.location.reload())
+      .catch(() => console.log("err"));
+  }
+
+  const removeLike = () => {
+    disLike(id, localStorage.getItem("userId"))
+      .then(() => window.location.reload())
+      .catch(() => console.log("err"));
+  }
+
   return (
+    <> 
     <div className="adminx-container">
       <NavBar />
       <div className="adminx-content">
@@ -103,13 +117,20 @@ export default function PostDetail() {
             <img width="100%" src={`data:image/jpeg;base64,${post.picture}`} alt="img post"></img>
           </div>
           <div className="col-5">
-            <div className="card" style={{maxHeight:"80vh"}}>
+            <div className="card" style={{ maxHeight: "80vh" }}>
               <div className="card-header">
                 <div className="row mt-2">
-                  <div className="col-6 p-0">
-                    <button className="btn-invisible ml-2" id="btnEdit" type="button">
-                      <img className="menu-icon mr-1" src="/ico/like.png" alt="menu"></img>{likes.length}
-                    </button>
+                  <div className="col-6 p-0">{
+                    likes.filter(({ iduser }) => iduser.toString() === localStorage.getItem('userId')).length > 0 ?
+                      <button className="btn-invisible ml-2" id="btndislike">
+                        <img className=" background-gradient menu-icon mr-1" src="/ico/like.png" width="100%" alt="menu" onClick={removeLike}></img>
+                      </button>
+                      :
+                      <button className="btn-invisible ml-2" type="button" id="btnlike" onClick={addlike}>
+                        <img className="menu-icon mr-1" src="/ico/like.png" alt="menu"></img>
+                      </button>
+                    }
+                    <button className="btn-invisible" type="button" data-toggle="modal" data-target="#likesDetail">{likes.length}</button> 
                     <button className="btn-invisible ml-3" id="btnEdit" type="button">
                       <img className="menu-icon mr-1" src="/ico/comment.png" alt="menu"></img>{comments.length}
                     </button>
@@ -123,21 +144,21 @@ export default function PostDetail() {
                       </button>
                     </div>
                   }
-                  </div>
-                  {post.description !== "" &&
-                    <p className="mt-2" id="pdescription"><a href={"/users/" + username} className="a-white">{username} </a> {post.description}</p>
-                  }
-                  <div style={{display:"none"}} id="divEdit">
-                    <input className="form-control" placeholder="Type a new description..." id="newDesc"></input>
-                    <div className="row justify-content-end mr-2">
-                      <button className="btn-petbook m-2" onClick={cancelEdit}>Cancel</button>
-                      <button className="btn-petbook m-2" onClick={editPost}>Save</button>
-                    </div>
+                </div>
+                {post.description !== "" &&
+                  <p className="mt-2" id="pdescription"><a href={"/users/" + username} className="a-white">{username} </a> {post.description}</p>
+                }
+                <div style={{ display: "none" }} id="divEdit">
+                  <input className="form-control" placeholder="Type a new description..." id="newDesc"></input>
+                  <div className="row justify-content-end mr-2">
+                    <button className="btn-petbook m-2" onClick={cancelEdit}>Cancel</button>
+                    <button className="btn-petbook m-2" onClick={editPost}>Save</button>
                   </div>
                 </div>
-              <div className="card-body row justify-content-center" style={{ overflowY: "scroll"}}>{
-                comments.map( comment => 
-                  <div className="col-10 m-2 align-items-end" style={{borderBottom: "1px solid #C0C0C0"}}>
+              </div>
+              <div className="card-body row justify-content-center" style={{ overflowY: "scroll" }}>{
+                comments.map(comment =>
+                  <div className="col-10 m-2 align-items-end" style={{ borderBottom: "1px solid #C0C0C0" }}>
                     <p><a href={"/users/" + getUserComment(comment.iduser)} className="a-white">{getUserComment(comment.iduser)} </a> {comment.mesage}</p>
                   </div>
                 )
@@ -155,5 +176,23 @@ export default function PostDetail() {
         </div>
       </div>
     </div>
+    <div className="modal fade" id="likesDetail" tabIndex="-1" aria-hidden="true">
+      <div className="modal-dialog">
+          <div className="modal-content">
+              <div className="modal-header">
+                  <h4 className="modal-title">Likes</h4>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div className="p-4">{
+                  likes.map(like =>
+                      <User iduser={like.iduser}></User>
+                  )
+              }</div>
+          </div>
+      </div>
+    </div>
+    </>
   );
 }

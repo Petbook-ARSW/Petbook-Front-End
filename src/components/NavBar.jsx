@@ -60,7 +60,6 @@ export default function NavBar(){
                 </div>
               </div>
             </li>
-            
             <li className="nav-item dropdown ml-2">
               <a className="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="/">
                 <img src="/ico/profilepicture.png" className="d-inline-block align-top" alt="home" ></img>

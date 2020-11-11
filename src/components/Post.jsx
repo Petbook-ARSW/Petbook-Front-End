@@ -7,7 +7,7 @@ export default function Event({ id, iduser, img, description, date }) {
 
     var [username, setUsername] = useState("");
     const [comments, setComments] = useState([]);
-  const [likes, setLikes] = useState([]);
+    const [likes, setLikes] = useState([]);
 
     useEffect(function () {
         Axios.get(`https://petbook-api.herokuapp.com/users/id/${iduser}`)
@@ -20,7 +20,9 @@ export default function Event({ id, iduser, img, description, date }) {
             .catch(() => setUsername(""));
         
         getLikesOfPost(id)
-            .then(Res => setLikes(Res))
+            .then(Res => {
+                setLikes(Res);
+            })
             .catch(() => setLikes([]));
 
         getCommentsOfPost(id)
@@ -62,10 +64,17 @@ export default function Event({ id, iduser, img, description, date }) {
                 <img width="100%" src={`data:image/jpeg;base64,${img}`} alt="img post"></img>
                 <div className="card-footer pl-4 pr-4 pt-0 pb-0">
                     <div className="row mt-2">
-                        <div className="col-6 p-0">
-                        <button className="btn-invisible ml-2" type="button">
-                            <img className="menu-icon mr-1" src="/ico/like.png" alt="menu"></img>{likes.length}
-                        </button>
+                        <div className="col-6 p-0">{
+                            likes.filter( ({iduser}) => iduser.toString() === localStorage.getItem('userId')).length > 0 ?
+                                <button className="btn-invisible ml-2" id="btndislike">
+                                    <img className=" background-gradient menu-icon mr-1" src="/ico/like.png" width="100%" alt="menu"></img>
+                                </button>
+                            :
+                                <button className="btn-invisible ml-2" type="button" id="btnlike" >
+                                    <img className="menu-icon mr-1" src="/ico/like.png" alt="menu"></img>
+                                </button>
+                        }
+                        <a className="a-white" href="/">{likes.length}</a> 
                         <button className="btn-invisible ml-3" type="button">
                             <img className="menu-icon mr-1" src="/ico/comment.png" alt="menu" onClick={redirectTopost}></img>{comments.length}
                         </button>
@@ -76,7 +85,7 @@ export default function Event({ id, iduser, img, description, date }) {
                                 </button>
                                 <button className="btn-invisible" id="btnDelete" type="button" onClick={deletePost}>
                                     <img className="menu-icon" src="/ico/delete.png" alt="menu"></img>
-                                </button>
+                                </button>  
                             </div>
                         }
                         </div>

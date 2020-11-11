@@ -75,5 +75,19 @@ export const addComment = ( comment ) => {
              });
 }
 
+export const postLike = ( idpost, iduser ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/users/LikeToPost/${idpost}/${iduser}`, {
+                 method: 'POST'
+             }).then( res => {
+                 if (!res.ok) throw new Error('Response is NOT ok');
+             });
+}
 
-
+export const disLike = ( idpost, iduser ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/users/DislikeToPost/${idpost}/${iduser}`, {
+                 method: 'DELETE'
+             }).then( res => {
+                 alert(res);
+                 if (!res.ok) throw new Error('Response is NOT ok');
+             });
+}
