@@ -87,7 +87,6 @@ export const disLike = ( idpost, iduser ) => {
     return  fetch(`https://petbook-api.herokuapp.com/users/DislikeToPost/${idpost}/${iduser}`, {
                  method: 'DELETE'
              }).then( res => {
-                 alert(res);
                  if (!res.ok) throw new Error('Response is NOT ok');
              });
 }

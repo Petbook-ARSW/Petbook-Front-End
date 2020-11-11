@@ -85,7 +85,6 @@ export default function PostDetail() {
       idpost: id,
       mesage: document.getElementById("newComment").value
     }
-    console.log(newComment);
     addComment(newComment)
       .then(() => window.location.reload())
       .catch();
