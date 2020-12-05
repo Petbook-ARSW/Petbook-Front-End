@@ -8,7 +8,8 @@ import NewGoal from './NewGoal';
 import ModifyEvent from './ModifyEvent';
 import swal from 'sweetalert';
 import User from './User';
-
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 export default function EventDetail() {
 
@@ -17,6 +18,7 @@ export default function EventDetail() {
     const [goals, setGoals] = useState([]);
     const [participants, setParticipants] = useState([]);
     const [host, setHost] = useState();
+    const [hostid, setHostid] = useState();
 
     useEffect(function () {
         getEventById(id)
@@ -79,7 +81,10 @@ export default function EventDetail() {
                     });
 
                 getUserById(Response.host)
-                    .then(({userName}) => setHost(userName));
+                    .then(({id,userName}) => {
+                        setHost(userName);
+                        setHostid(id);
+                    });
             })
             .catch((Response) => { console.log(Response) });
 
@@ -115,7 +120,22 @@ export default function EventDetail() {
     const assistEvent = (e) => {
         e.preventDefault(e);
         postParticipation(id, localStorage.getItem("userId"))
-            .then(() =>  window.location.reload());
+            .then(() =>  {
+                sendNotification();
+            });
+    }
+
+    const sendNotification = () => {
+        var socket = new SockJS('https://petbook-api.herokuapp.com/notificationSocket');
+        var stompClient = Stomp.over(socket);
+        var notification = {
+            description: "hola",
+            userid: hostid
+        }
+        stompClient.connect({}, function (frame) {
+            stompClient.send(`/app/notification/${hostid}`, {}, JSON.stringify(notification));
+            window.location.reload();
+        });
     }
 
     const noAssistEvent = (e) => {

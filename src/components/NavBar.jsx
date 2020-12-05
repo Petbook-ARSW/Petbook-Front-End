@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MenuCompany from './MenuCompany';
 import MenuPerson from './MenuPerson';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 export default function NavBar(){
 
   var notifications = [];
-  
+
+  useEffect(function () {
+    let socket = new SockJS('https://petbook-api.herokuapp.com/notificationSocket');
+    let stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+      stompClient.subscribe(`/topic/notification/${ localStorage.getItem("userId") }`, function (eventbody) {
+        notifications.push(JSON.parse(eventbody.body));
+        document.getElementById("numNotifications").style.visibility = "visible";
+      });
+    });
+  }, [notifications])
+
   const signOut = (e) =>{
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userId');
     localStorage.removeItem('typeUserLogged');
     localStorage.removeItem('userName');
     window.location.href = "/";
+  }
+
+  const viewNotifications = () =>{
+    document.getElementById("numNotifications").style.visibility = "hidden";
   }
 
   return(
@@ -41,22 +58,15 @@ export default function NavBar(){
           </form>
           <ul className="navbar-nav d-flex justify-content-end mr-2">
             <li className="nav-item dropdown d-flex align-items-center mr-2">
-              <a className="nav-link nav-link-notifications" id="dropdownNotifications" data-toggle="dropdown" href="/">
+              <a className="nav-link nav-link-notifications" id="dropdownNotifications" data-toggle="dropdown" onClick={viewNotifications} href="/">
                 <i className="display-inline-block align-middle mt-1"><img className= "menu-item" src=" /ico/bone.png" alt="notification"></img></i>
-                {
-                  notifications.length > 0 &&
-                  <span className="nav-link-notification-number">{notifications.length}</span>
-                }
+                <span className="nav-link-notification-number" id="numNotifications" style={{visibility:"hidden"}}></span>
               </a>
               <div className="dropdown-menu dropdown-menu-right dropdown-menu-notifications" aria-labelledby="dropdownNotifications">
                 <div className="notifications-header d-flex justify-content-between align-items-center">
                   <span className="notifications-header-title">
                     Notifications
                   </span>
-                  <a href="/" className="d-flex"><small>Mark all as read</small></a>
-                </div>
-                <div className="notifications-footer text-center">
-                  <a href="/"><small>View all notifications</small></a>
                 </div>
               </div>
             </li>
