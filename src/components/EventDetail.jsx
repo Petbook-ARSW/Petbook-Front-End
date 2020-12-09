@@ -10,6 +10,7 @@ import swal from 'sweetalert';
 import User from './User';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import DonatonDetail from './DonatonDetail';
 
 export default function EventDetail() {
 
@@ -74,7 +75,7 @@ export default function EventDetail() {
                             }
                         }
                     }).catch(() => {
-                        if (eventDate > new Date().getTime()){
+                        if (localStorage.getItem("typeUserLogged") === "Person" && eventDate > new Date().getTime()){
                             document.getElementById("btnassist").style.display = "inline";
                         }
                         setParticipants([])
@@ -175,6 +176,7 @@ export default function EventDetail() {
                                         <h5> Event detail</h5>
                                     </div>
                                     <div className="p-4">
+                                        <h6><strong>This event starts in ...</strong></h6> 
                                         <button className="btn-invisible mt-3" data-toggle="modal" data-target="#participants" id="btnparticipants">{participants.length} Participants</button>
                                         <h6 className="mt-3"><strong>Host company: <a className="a-white" href={"/users/"+host}>{host}</a></strong></h6>
                                         <h6 className="mt-3"><strong>Event name: </strong>{event.name}</h6>
@@ -187,6 +189,7 @@ export default function EventDetail() {
                                     </div>
                                 </div>
                             </div>
+                            <DonatonDetail idEvent={id} idHost={hostid} ></DonatonDetail>
                         </div>
                         <div className="row ml-1" id="goalsdiv" style={{ visibility: "hidden" }}>
                             <div className="col-lg-5">
@@ -201,6 +204,7 @@ export default function EventDetail() {
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

@@ -95,3 +95,12 @@ export const getParticipantsOfEvent = ( idevent ) => {
         return res.json();
     })
 }
+
+export const getValueDonations = ( idevent ) => {
+    return  fetch(`https://petbook-api.herokuapp.com/event/donations/values/${idevent}`)
+    .then( res => {
+        if (!res.ok) throw new Error('Response is NOT ok');
+        return res.json();
+    })
+}
+
