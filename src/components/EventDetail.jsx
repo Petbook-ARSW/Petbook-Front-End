@@ -14,7 +14,7 @@ import DonatonDetail from './DonatonDetail';
 
 export default function EventDetail() {
 
-    const { id } = useParams()
+    const { id } = useParams();
     const [event, setEvent] = useState({});
     const [goals, setGoals] = useState([]);
     const [participants, setParticipants] = useState([]);
@@ -82,7 +82,7 @@ export default function EventDetail() {
                     });
 
                 getUserById(Response.host)
-                    .then(({id,userName}) => {
+                    .then(({id, userName}) => {
                         setHost(userName);
                         setHostid(id);
                     });
@@ -123,6 +123,7 @@ export default function EventDetail() {
         postParticipation(id, localStorage.getItem("userId"))
             .then(() =>  {
                 sendNotification();
+                window.location.reload();
             });
     }
 
@@ -130,7 +131,7 @@ export default function EventDetail() {
         var socket = new SockJS('https://petbook-api.herokuapp.com/notificationSocket');
         var stompClient = Stomp.over(socket);
         var notification = {
-            description: "hola",
+            description: "",
             userid: hostid
         }
         stompClient.connect({}, function (frame) {
@@ -189,7 +190,10 @@ export default function EventDetail() {
                                     </div>
                                 </div>
                             </div>
-                            <DonatonDetail idEvent={id} idHost={hostid} ></DonatonDetail>
+                            {
+                                event.donaton &&
+                                <DonatonDetail idEvent={id} idHost={hostid} ></DonatonDetail>
+                            }
                         </div>
                         <div className="row ml-1" id="goalsdiv" style={{ visibility: "hidden" }}>
                             <div className="col-lg-5">
@@ -204,7 +208,6 @@ export default function EventDetail() {
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>

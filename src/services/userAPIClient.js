@@ -63,6 +63,14 @@ export const getUserById = ( iduser ) => {
                 })
 }
 
+export const getNotificationsByUser = (idUser) =>{
+    return  fetch(`https://petbook-api.herokuapp.com/notifications/${idUser}`)
+                .then( res => {
+                    if (!res.ok) throw new Error('Response is NOT ok');
+                    return res.json();
+                })
+}
+
 
 
 
